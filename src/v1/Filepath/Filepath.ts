@@ -131,4 +131,30 @@ export class Filepath extends RefinedString {
         return this.#_pathApi.basename(this._value, ext);
     }
 
+    /**
+     * `dirname()` is a wrapper around NodeJS's `path.dirname()`.
+     *
+     * The returned Filepath will have the same `base` path and
+     * same `pathApi` that this Filepath does.
+     *
+     * `dirname()` returns the directory name of `path`, similiar to
+     * the UNIX `dirname` command. Trailing directory separators are
+     * ignored, see {@link PathApi.sep}
+     *
+     * @returns
+     * Everything but the last portion of `path`.
+     */
+    public dirname(
+        {
+            onError = THROW_THE_ERROR,
+            pathApi = this.#_pathApi,
+            base = this.#_base
+        }: Partial<MakeFilepathOptions> = {}
+    ): Filepath {
+        return new Filepath(
+            this.#_pathApi.dirname(this._value),
+            { onError, pathApi, base }
+        );
+    }
+
 }

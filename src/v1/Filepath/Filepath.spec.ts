@@ -177,4 +177,50 @@ describe("Filepath()", () => {
             expect(actualParamList).to.eql(expectParamList);
         });
     });
+
+    describe(".dirname()", () => {
+        it("returns the name of the parent, as a Filepath", () => {
+            const unit = new Filepath("/tmp", { pathApi: path.posix });
+
+            const expectedValue = new Filepath("/", { pathApi: path.posix});
+            const actualValue = unit.dirname();
+
+            expect(actualValue).to.eql(expectedValue);
+        });
+
+        it("uses the provided pathApi", () => {
+            const inputLocation = "/tmp";
+            const dummyApi = new DummyPathApi();
+            dummyApi.normalizeResponses = [inputLocation];
+
+            const expectedCallList = [
+                "dirname()",
+
+                // this is called by the constructor of the new Filepath
+                // that unit.dirname() builds
+                "normalize()",
+            ];
+            const expectParamList = [
+                // from unit.dirname()
+                "/tmp",
+
+                // from the retval.constructor()
+                "/",
+            ];
+
+            const unit = new Filepath(inputLocation, { pathApi: dummyApi });
+            expect(unit.valueOf()).to.equal("/tmp");
+
+            dummyApi.reset();
+            dummyApi.dirnameResponses = ["/"];
+            dummyApi.normalizeResponses = ["/"];
+
+            unit.dirname();
+            const actualCallList = dummyApi.calledList;
+            const actualParamList = dummyApi.paramList;
+
+            expect(actualCallList).to.eql(expectedCallList);
+            expect(actualParamList).to.eql(expectParamList);
+        });
+    });
 });
