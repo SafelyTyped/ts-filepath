@@ -280,4 +280,40 @@ export class Filepath extends RefinedString {
         return this.#_pathApi.relative(this._value, to.valueOf());
     }
 
+    /**
+     * `resolve()` is a wrapper around NodeJS's `path.resolve()`.
+     *
+     * `resolve()` combines this Filepath and the given path segments into
+     *  an absolute path.
+     *
+     * It works from right-to-left (from the last segment backwards), and
+     * it stops as soon as an absolute path has been constructed.
+     *
+     * Zero-length path segments are ignored.
+     *
+     * If the assembled path is a relative path, it is treated as a relative
+     * path to the current working directory, and converted into an
+     * absolute path.
+     *
+     * The assembled path is normalised before being returned. Trailing
+     * path separators are removed.
+     *
+     * If no path segments are passed in, `resolve()` returns the absolute
+     * path of the current working directory.
+     *
+     * The returned Filepath will have the same `base` path and
+     * same `pathApi` that this Filepath does.
+     *
+     * @returns
+     * The assembled, normalised path. Always an absolute path.
+     */
+    public resolve(...paths: string[]): Filepath {
+        return new Filepath(
+            this.#_pathApi.resolve(this._value, ...paths),
+            {
+                pathApi: this.#_pathApi,
+                base: this.#_base
+            }
+        );
+    }
 }

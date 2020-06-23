@@ -517,4 +517,60 @@ describe("Filepath()", () => {
         });
     });
 
+    describe(".resolve()", () => {
+        it("creates a new Filepath by applying the given path(s)", () => {
+            const unit = new Filepath(
+                "/tmp/this/is/an/example",
+                { pathApi: path.posix }
+            );
+            const expectedValue = new Filepath(
+                "/tmp/this/is/another/example",
+                { pathApi: path.posix }
+            );
+
+            const actualValue = unit.resolve("..", "..", "another/example");
+
+            expect(actualValue).to.eql(expectedValue);
+        });
+
+        it("uses the provided pathApi", () => {
+            const dummyApi = new DummyPathApi();
+            dummyApi.resolveResponses = ["/tmp/this/is/an/example"];
+            dummyApi.normalizeResponses = ["/tmp/this/is/an/example"];
+
+            const expectedCallList = [
+                // from unit.resolve()
+                "resolve()",
+
+                // from the retval.constructor()
+                "normalize()",
+            ];
+            const expectParamList = [
+                // from unit.resolve()
+                [ "/tmp/this/is/an/example", "..", "..", "another/example"],
+
+                // from the retval.constructor
+                "/tmp/this/is/another/example"
+            ];
+
+            const unit = new Filepath(
+                "/tmp/this/is/an/example",
+                { pathApi: dummyApi }
+            );
+            expect(unit.valueOf()).to.equal("/tmp/this/is/an/example");
+
+            dummyApi.reset();
+            dummyApi.resolveResponses = [
+                "/tmp/this/is/another/example",
+            ];
+            dummyApi.normalizeResponses = [ "/tmp/this/is/another/example" ];
+
+            unit.resolve("..", "..", "another/example");
+            const actualCallList = dummyApi.calledList;
+            const actualParamList = dummyApi.paramList;
+
+            expect(actualCallList).to.eql(expectedCallList);
+            expect(actualParamList).to.eql(expectParamList);
+        });
+    });
 });
