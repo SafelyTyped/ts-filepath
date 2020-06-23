@@ -30,5 +30,37 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-export * from "./Errors";
-export * from "./Filepath";
+import { describe } from "mocha";
+import { expect } from "chai";
+import { makeFilepath } from "./makeFilepath";
+import { ValidFilepaths } from "../_fixtures/Filepaths";
+import { Filepath } from "./Filepath";
+import { DummyPathApi } from "../_fixtures/PathApi";
+
+describe("makeFilepath()", () => {
+    describe("accepts any valid filepath", () => {
+        ValidFilepaths.forEach(inputValue => {
+            it("accepts " + JSON.stringify(inputValue), () => {
+                const actualValue = makeFilepath(inputValue);
+                expect(actualValue).to.be.instanceOf(Filepath);
+                expect(actualValue.valueOf()).to.equal(inputValue);
+            });
+        });
+    });
+
+    describe("user-supplied options", () => {
+        it("passes the `base` option through", () => {
+            const inputValue = "/this/is/a/test";
+
+            const actualValue = makeFilepath("dummy", { base: inputValue });
+            expect(actualValue.base).to.equal(inputValue);
+        });
+
+        it("passes the `pathApi` option through", () => {
+            const inputValue = new DummyPathApi();
+
+            const actualValue = makeFilepath("dummy", { pathApi: inputValue });
+            expect(actualValue.pathApi).to.equal(inputValue);
+        });
+    });
+});

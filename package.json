@@ -1,6 +1,6 @@
 {
   "name": "@safelytyped/filepath",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A safe path for working with locations on local filesystems, for Typescript.",
   "repository": "github:SafelyTyped/ts-filepath",
   "main": "lib/v1/index.js",
@@ -18,8 +18,7 @@
   "contributors": [
     "Stuart Herbert <stuherbert@ganbarodigital.com> (https://ganbarodigital.com)"
   ],
-  "keywords": [
-  ],
+  "keywords": [],
   "files": [
     "lib/**/*",
     "CHANGELOG.md",
@@ -27,7 +26,8 @@
   ],
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@safelytyped/core-types": "^0.1.0"
+    "@safelytyped/core-types": "^0.1.10",
+    "@safelytyped/node-pathapi": "^1.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.8",

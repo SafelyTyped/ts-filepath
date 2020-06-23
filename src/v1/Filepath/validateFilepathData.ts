@@ -29,6 +29,34 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+import { AppErrorOr, DataPath } from "@safelytyped/core-types";
 
-export * from "./Errors";
-export * from "./Filepath";
+/**
+ * `validateFilepathData()` is a {@link DataValidator}. Use it to
+ * prove that the given input is a legal input value for
+ * {@link makeFilepath}
+ *
+ * @param path
+ * where are we in the data structure that you are validating?
+ * @param input
+ * the value to validate
+ * @returns
+ * - `input` if validation succeeds, or
+ * - an `AppError` explaining why validation failed
+ *
+ * @category Filepath
+ */
+export function validateFilepathData (
+    path: DataPath,
+    input: string
+): AppErrorOr<string> {
+    // for now, we don't have a way to check that `input` does
+    // contain a valid filepath.
+    //
+    // - we can't check if the given filepath exists, because filepaths
+    //   don't have to exist to be valid
+    //
+    // however, do still use this validator, in case we come up with
+    // a meaningful check in the future!
+    return input;
+}

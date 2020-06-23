@@ -21,26 +21,29 @@ For each release, changes are grouped under these headings:
 
 The following changes have been completed, and will be included in the next tagged release.
 
-### Backwards-Compatibility Breaks
+## v0.1.0
+
+Released Tuesday, 23rd June 2020.
 
 ### New
 
-### Fixes
-
-### Dependencies
-
-### Tools
-
-## v0.0.1
-
-Released Monday, 1st January 2020.
-
-### Backwards-Compatibility Breaks
-
-### New
-
-### Fixes
-
-### Dependencies
-
-### Tools
+* Errors
+  - added `InvalidFilepathDataError`
+* Filepath
+  - added `Filepath`
+    - added `Filepath` `base` option
+    - added `Filepath` `pathApi` option
+    - added `Filepath.basename()`
+    - added `Filepath.dirname()`
+    - added `Filepath.extname()`
+    - added `Filepath.isAbsolute()`
+    - added `Filepath.join()`
+    - added `Filepath.parse()`
+    - added `Filepath.relative()`
+    - added `Filepath.resolve()`
+    - added `Filepath.toNamespacedPath()`
+  - added `MakeFilepathOptions`
+  - added `isFilepathData()`
+  - added `makeFilepath()`
+  - added `mustBeFilepath()`
+  - added `validateFilepathData()`

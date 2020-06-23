@@ -30,5 +30,17 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-export * from "./Errors";
-export * from "./Filepath";
+import { DataPath, ExtraPublicData } from "@safelytyped/core-types";
+
+/**
+ * `InvalidFilepathData` defines the data that every
+ * {@link InvalidFilepathError} requires.
+ *
+ * @category Errors
+ */
+export interface InvalidFilepathData extends ExtraPublicData {
+    public: {
+        dataPath: DataPath;
+        input: string;
+    };
+}

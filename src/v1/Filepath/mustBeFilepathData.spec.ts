@@ -30,5 +30,18 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-export * from "./Errors";
-export * from "./Filepath";
+import { describe } from "mocha";
+import { expect } from "chai";
+import { mustBeFilepathData } from "./mustBeFilepathData";
+import { ValidFilepaths } from "../_fixtures/Filepaths";
+
+describe("mustBeFilepathData()", () => {
+    describe("accepts any valid filepath", () => {
+        ValidFilepaths.forEach(inputValue => {
+            it("accepts " + JSON.stringify(inputValue), () => {
+                const actualValue = mustBeFilepathData(inputValue);
+                expect(actualValue).to.equal(inputValue);
+            });
+        });
+    });
+});

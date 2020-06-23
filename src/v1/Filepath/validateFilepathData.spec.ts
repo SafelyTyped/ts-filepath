@@ -29,6 +29,23 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+import { DEFAULT_DATA_PATH } from "@safelytyped/core-types";
+import { expect } from "chai";
+import { describe } from "mocha";
 
-export * from "./Errors";
-export * from "./Filepath";
+import { ValidFilepaths } from "../_fixtures/Filepaths";
+import { validateFilepathData } from "./validateFilepathData";
+
+describe("validateFilepathData()", () => {
+    describe("returns any valid filepath", () => {
+        ValidFilepaths.forEach(inputValue => {
+            it("accepts " + JSON.stringify(inputValue), () => {
+                const actualValue = validateFilepathData(
+                    DEFAULT_DATA_PATH,
+                    inputValue
+                );
+                expect(actualValue).to.equal(inputValue);
+            });
+        });
+    });
+});
