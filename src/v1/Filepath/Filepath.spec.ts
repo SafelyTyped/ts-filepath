@@ -33,11 +33,11 @@
 import { AnyAppError } from "@safelytyped/core-types";
 import { expect } from "chai";
 import { describe } from "mocha";
+import path from "path";
 
 import { ValidFilepaths } from "../_fixtures/Filepaths";
 import { DummyPathApi } from "../_fixtures/PathApi";
 import { Filepath } from "./Filepath";
-
 
 describe("Filepath()", () => {
     describe(".constructor", () => {
@@ -97,6 +97,22 @@ describe("Filepath()", () => {
 
             const unit = new Filepath("dummy", { base: inputValue });
             expect(unit.base).to.equal(inputValue);
+        });
+    });
+
+    describe(".pathApi", () => {
+        it("is the NodeJS path module by default", () => {
+            const unit = new Filepath("dummy");
+            const actualValue = unit.pathApi;
+
+            expect(actualValue === path.posix || actualValue === path.win32).to.equal(true);
+        });
+
+        it("contains the user-supplied `pathApi` option", () => {
+            const inputValue = new DummyPathApi();
+
+            const unit = new Filepath("dummy", { pathApi: inputValue });
+            expect(unit.pathApi).to.equal(inputValue);
         });
     });
 });
