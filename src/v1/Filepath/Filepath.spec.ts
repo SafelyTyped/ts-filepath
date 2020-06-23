@@ -573,4 +573,73 @@ describe("Filepath()", () => {
             expect(actualParamList).to.eql(expectParamList);
         });
     });
+
+    describe(".toNamespacedName()", () => {
+        describe("on Windows", () => {
+            it("converts a Filepath to a Win32 namespaced name", () => {
+                const unit = new Filepath(
+                    "c:\\Windows\\System",
+                    { pathApi: path.win32 }
+                );
+                const expectedValue = "\\\\?\\c:\\Windows\\System";
+
+                const actualValue = unit.toNamespacedPath().valueOf();
+                expect(actualValue).to.equal(expectedValue);
+                expect(actualValue).to.not.equal(unit.valueOf());
+            });
+        });
+
+        describe("on POSIX", () => {
+            it("returns a Filepath with the same Filepath.valueOf()", () => {
+                const unit = new Filepath(
+                    "c:\\Windows\\System",
+                    { pathApi: path.posix }
+                );
+                const expectedValue = "c:\\Windows\\System";
+
+                const actualValue = unit.toNamespacedPath().valueOf();
+                expect(actualValue).to.equal(expectedValue);
+                expect(actualValue).to.equal(unit.valueOf());
+            });
+        });
+
+        it("uses the provided pathApi", () => {
+            const dummyApi = new DummyPathApi();
+            dummyApi.resolveResponses = ["c:\\Windows\\System"];
+            dummyApi.normalizeResponses = ["c:\\Windows\\System"];
+
+            const expectedCallList = [
+                // from unit.toNamespacedPath()
+                "toNamespacedPath()",
+
+                // from retval.constructor()
+                "normalize()",
+            ];
+            const expectParamList = [
+                // from unit.toNamespacedPath()
+                "c:\\Windows\\System",
+
+                // from retval.constructor()
+                "c:\\Windows\\System",
+            ];
+
+            const unit = new Filepath(
+                "c:\\Windows\\System",
+                { pathApi: dummyApi }
+            );
+            expect(unit.valueOf()).to.equal("c:\\Windows\\System");
+
+            dummyApi.reset();
+            dummyApi.toNamespacedPathResponses = [
+                "c:\\Windows\\System",
+            ];
+
+            unit.toNamespacedPath();
+            const actualCallList = dummyApi.calledList;
+            const actualParamList = dummyApi.paramList;
+
+            expect(actualCallList).to.eql(expectedCallList);
+            expect(actualParamList).to.eql(expectParamList);
+        });
+    });
 });

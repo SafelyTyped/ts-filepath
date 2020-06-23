@@ -316,4 +316,31 @@ export class Filepath extends RefinedString {
             }
         );
     }
+
+    /**
+     * `toNamespacedPath()` is a wrapper around NodeJS's
+     * `path.toNamespacedPath()`.
+     *
+     * `toNamespacedPath()` behaves differently on Windows and on POSIX.
+     *
+     * On Windows, it converts this Filepath to the equivalent namespace-prefixed
+     * path: https://docs.microsoft.com/en-us/windows/desktop/FileIO/naming-a-file#namespaces.
+     *
+     * On POSIX, a new Filepath is returned, containing the unmodified
+     * `Filepath.toValue()`.
+     *
+     * @returns
+     * - on Windows, the namespaced path.
+     * - on POSIX, the unmodified path.
+     */
+    public toNamespacedPath(): Filepath {
+        return new Filepath(
+            this.#_pathApi.toNamespacedPath(this._value),
+            {
+                pathApi: this.#_pathApi,
+                base: this.#_base
+            }
+        );
+    }
+
 }
