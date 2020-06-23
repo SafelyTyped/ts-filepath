@@ -30,5 +30,23 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-export * from "./Errors";
-export * from "./Filepath";
+import { expect } from "chai";
+import { describe } from "mocha";
+
+import { InvalidFilepathDataError } from "./InvalidFilepathDataError";
+import { DEFAULT_DATA_PATH } from "@safelytyped/core-types";
+
+describe("InvalidFilepathDataError", () => {
+    describe(".constructor()", () => {
+        it("creates a Javascript error", () => {
+            const unit = new InvalidFilepathDataError({
+                public: {
+                    dataPath: DEFAULT_DATA_PATH,
+                    input: "THIS IS A TEST",
+                },
+            });
+
+            expect(unit).to.be.instanceOf(Error);
+        });
+    });
+});

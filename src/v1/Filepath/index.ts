@@ -30,5 +30,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-export * from "./Errors";
 export * from "./Filepath";
+export * from "./isFilepathData";
+export * from "./makeFilepath";
+export * from "./mustBeFilepathData";
+export * from "./validateFilepathData";

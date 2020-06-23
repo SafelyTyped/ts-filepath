@@ -30,5 +30,39 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-export * from "./Errors";
-export * from "./Filepath";
+import {
+    applyFunctionalOptions,
+    FunctionalOption,
+    OnErrorOptions,
+    SmartConstructor,
+    THROW_THE_ERROR,
+} from "@safelytyped/core-types";
+
+import { Filepath } from "./Filepath";
+
+/**
+ * `makeFilepath()` is a smart constructor. It verifies that the
+ * `input` contains valid Filepath data, by calling
+ * {@link mustBeFilepathData}.
+ *
+ * @category Filepath
+ * @param input
+ * This is the data we'll use to create the new Filepath
+ * @param onError
+ * If `input` fails validation, we'll pass an {@link AppError} to this.
+ * @param fnOpts
+ * These are user-supplied functional options.
+ * @returns
+ * The new Filepath object.
+ */
+export const makeFilepath: SmartConstructor<string, Filepath, OnErrorOptions, Filepath> = (
+    input: string,
+    {
+        onError = THROW_THE_ERROR
+    }: Partial<OnErrorOptions> = {},
+    ...fnOpts: FunctionalOption<Filepath, OnErrorOptions>[]
+): Filepath => applyFunctionalOptions(
+    new Filepath(input, { onError }),
+    { onError },
+    ...fnOpts
+);

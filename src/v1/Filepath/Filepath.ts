@@ -30,5 +30,35 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-export * from "./Errors";
-export * from "./Filepath";
+import {
+    OnErrorOptions,
+    RefinedString,
+    THROW_THE_ERROR
+} from "@safelytyped/core-types";
+
+import { mustBeFilepathData } from "./mustBeFilepathData";
+
+/**
+ * `Filepath` is a safe type.
+ *
+ * @category Filepath
+ */
+export class Filepath extends RefinedString {
+    /**
+     * `Constructor` creates a new `Filepath`.
+     *
+     * @param input
+     * The data we need to build a Filepath.
+     * @param onError
+     * If `input` fails validation, we pass an {@link AppError}
+     * to `onError()`.
+     */
+    public constructor(
+        input: string,
+        {
+            onError = THROW_THE_ERROR
+        }: Partial<OnErrorOptions> = {}
+    ) {
+        super(mustBeFilepathData, input, { onError });
+    }
+}

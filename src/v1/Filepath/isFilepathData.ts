@@ -30,5 +30,19 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-export * from "./Errors";
-export * from "./Filepath";
+import { IS_DATA_DEFAULT_OPTIONS, isData } from "@safelytyped/core-types";
+
+import { validateFilepathData } from "./validateFilepathData";
+
+/**
+ * `isFilepathData()` is a data guard.
+ *
+ * @category Filepath
+ * @param input
+ * The input data to validate.
+ * @returns
+ * - `true` if `input` can be used to make a new {@link Filepath}
+ * - `false` otherwise.
+ */
+export const isFilepathData = (input: string): boolean =>
+    isData(validateFilepathData, input, IS_DATA_DEFAULT_OPTIONS);

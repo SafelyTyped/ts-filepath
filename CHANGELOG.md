@@ -25,6 +25,15 @@ The following changes have been completed, and will be included in the next tagg
 
 ### New
 
+* Errors
+  - added `InvalidFilepathDataError`
+* Filepath
+  - added `Filepath`
+  - added `isFilepathData()`
+  - added `makeFilepath()`
+  - added `mustBeFilepath()`
+  - added `validateFilepathData()`
+
 ### Fixes
 
 ### Dependencies
