@@ -341,4 +341,81 @@ describe("Filepath()", () => {
             expect(actualParamList).to.eql(expectParamList);
         });
     });
+
+    describe(".join()", () => {
+        it("appends the given paths to the Filepath", () => {
+            const unit = new Filepath(
+                "/tmp/this/is/an/example",
+                { pathApi: path.posix }
+            );
+            const expectedValue = new Filepath(
+                "/tmp/this/is/another/example",
+                { pathApi: path.posix }
+            );
+
+            const actualValue = unit.join("..", "..", "another/example");
+            expect(actualValue).to.eql(expectedValue);
+        });
+
+        it("returns a Filepath that has the same `base` as the original Filepath", () => {
+            const expectedBase = "/tmp/this/is";
+            const unit1 = new Filepath(
+                "an/example",
+                {
+                    pathApi: path.posix,
+                    base: expectedBase
+                }
+            );
+
+            const unit2 = unit1.join("..", "..", "another/example");
+            const actualBase = unit2.base;
+
+            expect(actualBase).to.eql(expectedBase);
+        });
+
+        it("uses the provided pathApi", () => {
+            const inputLocation = "/tmp/this/isan/example";
+            const dummyApi = new DummyPathApi();
+            dummyApi.normalizeResponses = ["/tmp/this/is/an/example"];
+
+            const expectedCallList = [
+                // from unit.join()
+                "join()",
+
+                // from the retval.constructor
+                "normalize()",
+            ];
+            const expectParamList = [
+                // from unit.join()
+                [
+                    "/tmp/this/is/an/example",
+                    "..",
+                    "..",
+                    "another/example",
+                ],
+
+                // from the retval.constructor
+                "/tmp/this/is/another/example",
+            ];
+
+            const unit = new Filepath(
+                inputLocation,
+                { pathApi: dummyApi }
+            );
+            expect(unit.valueOf()).to.equal("/tmp/this/is/an/example");
+
+            dummyApi.reset();
+            dummyApi.joinResponses = ["/tmp/this/is/another/example"];
+            dummyApi.resolveResponses = ["/tmp/this/is/another/example"];
+            dummyApi.normalizeResponses = ["/tmp/this/is/another/example"];
+
+            unit.join("..", "..", "another/example");
+            const actualCallList = dummyApi.calledList;
+            const actualParamList = dummyApi.paramList;
+
+            expect(actualCallList).to.eql(expectedCallList);
+            expect(actualParamList).to.eql(expectParamList);
+        });
+    });
+
 });

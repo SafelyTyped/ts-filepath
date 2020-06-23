@@ -193,4 +193,32 @@ export class Filepath extends RefinedString {
     public isAbsolute(): boolean {
         return this.#_pathApi.isAbsolute(this._value);
     }
+
+    /**
+     * `join()` is a wrapper around NodeJS's `path.join()`.
+     *
+     * `join()` combines this Filepath and all the given segments into a
+     * single string, using {@link PathApi.sep} as the delimiter, and then
+     * normalises that string.
+     *
+     * Zero-length path segments are ignored.
+     *
+     * If the normalised string is empty, `join()` returns `.` (the
+     * current working directory).
+     *
+     * The returned Filepath will have the same `base` path and
+     * same `pathApi` that this Filepath does.
+     *
+     * @returns
+     * The assembled path. Guaranteed never to be empty.
+     */
+    public join(...paths: string[]): Filepath {
+        return new Filepath(
+            this.#_pathApi.join(this._value, ...paths),
+            {
+                pathApi: this.#_pathApi,
+                base: this.#_base
+            }
+        );
+    }
 }
