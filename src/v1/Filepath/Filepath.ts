@@ -37,7 +37,10 @@ import { MakeFilepathOptions } from "./MakeFilepathOptions";
 import { mustBeFilepathData } from "./mustBeFilepathData";
 
 /**
- * `Filepath` is a safe type.
+ * `Filepath` is a safe type. It represents a path to an item on
+ * a (possibly local) filesystem.
+ *
+ * It acts as a wrapper around NodeJS's `path` module.
  *
  * @category Filepath
  */
@@ -305,11 +308,19 @@ export class Filepath extends RefinedString {
      * same `pathApi` that this Filepath does.
      *
      * @returns
-     * The assembled, normalised path. Always an absolute path.
+     * The assembled, normalised Filepath. Guaranteed to be an absolute path.
      */
     public resolve(...paths: string[]): Filepath {
+        // resolve() will always return an absolute path
+        const newAbsPath = this.#_pathApi.resolve(
+            this.#_base || "",
+            this._value,
+            ...paths
+        );
+
+        // all done
         return new Filepath(
-            this.#_pathApi.resolve(this._value, ...paths),
+            newAbsPath,
             {
                 pathApi: this.#_pathApi,
                 base: this.#_base

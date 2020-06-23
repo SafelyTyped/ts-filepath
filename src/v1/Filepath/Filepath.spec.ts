@@ -547,7 +547,7 @@ describe("Filepath()", () => {
             ];
             const expectParamList = [
                 // from unit.resolve()
-                [ "/tmp/this/is/an/example", "..", "..", "another/example"],
+                [ "", "/tmp/this/is/an/example", "..", "..", "another/example"],
 
                 // from the retval.constructor
                 "/tmp/this/is/another/example"
