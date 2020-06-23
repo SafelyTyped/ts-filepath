@@ -1,40 +1,9 @@
-//
-// Copyright (c) 2020-present Ganbaro Digital Ltd.
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-// 1. Redistributions of source code must retain the above copyright
-//    notice, this list of conditions and the following disclaimer.
-// 2. Redistributions in binary form must reproduce the above copyright
-//    notice, this list of conditions and the following disclaimer in the
-//    documentation and/or other materials provided with the
-//    distribution.
-// 3. Neither the names of the copyright holders nor the names of its
-//    contributors may be used to endorse or promote products derived
-//    from this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-import { RefinedString, THROW_THE_ERROR } from "@safelytyped/core-types";
-import { PathApi } from "@safelytyped/node-pathapi";
-import path from "path";
+```typescript
+// how to import into your own code
+import { Filepath } from "@safelytyped/filepath";
 
-import { MakeFilepathOptions } from "./MakeFilepathOptions";
-import { mustBeFilepathData } from "./mustBeFilepathData";
+// our base class and interface can be found here:
+import { RefinedString, Value } from "@safelytyped/core-types";
 
 /**
  * `Filepath` is a safe type. It represents a path to an item on
@@ -44,32 +13,7 @@ import { mustBeFilepathData } from "./mustBeFilepathData";
  *
  * @category Filepath
  */
-export class Filepath extends RefinedString {
-
-    /**
-     * `#_base` is for keeping track of any path that this Filepath
-     * is built from, relative to, and the like.
-     *
-     * Useful for tracking parent paths when resolving '$ref' entries
-     * in JSON schema and the like.
-     */
-    #_base: string|undefined;
-
-    /**
-     * `#_pathApi` is the API to use for all path operations.
-     *
-     * Useful for passing in your own API when writing unit tests.
-     */
-    #_pathApi: PathApi;
-
-
-    /**
-     * `#_parts` holds the `path.parse()` result of this Filepath.
-     *
-     * It's an internal cache, to avoid repeated calls to `path.parse()`
-     * from inside `Filepath.parse()`.
-     */
-    #_parts: path.ParsedPath | undefined;
+export class Filepath extends RefinedString implements Value<string> {
 
     /**
      * `Constructor` creates a new `Filepath`.
@@ -92,13 +36,7 @@ export class Filepath extends RefinedString {
             pathApi = path,
             base
         }: Partial<MakeFilepathOptions> = {}
-    ) {
-        // we normalise the given path
-        super(mustBeFilepathData, pathApi.normalize(input), { onError });
-
-        this.#_base = base;
-        this.#_pathApi = pathApi;
-    }
+    );
 
     /**
      * `base` is for keeping track of any path that this Filepath
@@ -107,9 +45,7 @@ export class Filepath extends RefinedString {
      * Useful for tracking parent paths when resolving '$ref' entries
      * in JSON schema and the like.
      */
-    get base() {
-        return this.#_base;
-    }
+    public readonly base: string;
 
     /**
      * `pathApi` is the API to use for all path operations.
@@ -117,13 +53,11 @@ export class Filepath extends RefinedString {
      * By default, this is the Node JS `path` module for your platform
      * (`path.windows` or `path.posix`).
      */
-    get pathApi() {
-        return this.#_pathApi;
-    }
+    public readonly pathApi: string;
 
     // =======================================================================
     //
-    // pathAPi wrappers
+    // pathApi wrappers
     //
     // -----------------------------------------------------------------------
 
@@ -140,9 +74,7 @@ export class Filepath extends RefinedString {
      * The last portion of the Filepath. If the Filepath` ends in `ext`,
      * that is stripped too.
      */
-    public basename(ext?: string): string {
-        return this.#_pathApi.basename(this._value, ext);
-    }
+    public basename(ext?: string): string;
 
     /**
      * `dirname()` is a wrapper around NodeJS's `path.dirname()`.
@@ -163,12 +95,7 @@ export class Filepath extends RefinedString {
             pathApi = this.#_pathApi,
             base = this.#_base
         }: Partial<MakeFilepathOptions> = {}
-    ): Filepath {
-        return new Filepath(
-            this.#_pathApi.dirname(this._value),
-            { onError, pathApi, base }
-        );
-    }
+    ): Filepath;
 
     /**
      * `extname` is a wrapper around NodeJS's `path.extname()`.
@@ -185,9 +112,7 @@ export class Filepath extends RefinedString {
      * - the file extension (starting with a `.`) on success
      * - an empty string otherwise
      */
-    public extname(): string {
-        return this.#_pathApi.extname(this._value);
-    }
+    public extname(): string;
 
     /**
      * `isAbsolute()` is a wrapper around NodeJS's `path.isAbsolute()`.
@@ -202,9 +127,7 @@ export class Filepath extends RefinedString {
      * - `true` if this Filepath is an absolute path.
      * - `false` if this Filepath is a relative path.
      */
-    public isAbsolute(): boolean {
-        return this.#_pathApi.isAbsolute(this._value);
-    }
+    public isAbsolute(): boolean;
 
     /**
      * `join()` is a wrapper around NodeJS's `path.join()`.
@@ -224,15 +147,7 @@ export class Filepath extends RefinedString {
      * @returns
      * The assembled path. Guaranteed never to be empty.
      */
-    public join(...paths: string[]): Filepath {
-        return new Filepath(
-            this.#_pathApi.join(this._value, ...paths),
-            {
-                pathApi: this.#_pathApi,
-                base: this.#_base
-            }
-        );
-    }
+    public join(...paths: string[]): Filepath;
 
     /**
      * `parse()` is a wrapper around NodeJS's `path.parse()`.
@@ -254,15 +169,7 @@ export class Filepath extends RefinedString {
      * @returns
      * The breakdown of this Filepath.
      */
-    public parse(): path.ParsedPath {
-        // we calculate it once, and then stash it
-        // for repeated reference
-        const retval = this.#_parts || this.#_pathApi.parse(this._value);
-        this.#_parts = this.#_parts || retval;
-
-        // all done
-        return retval;
-    }
+    public parse(): path.ParsedPath;
 
     /**
      * `relative()` is a wrapper around NodeJS's `path.relative()`.
@@ -279,9 +186,7 @@ export class Filepath extends RefinedString {
      * - An empty string if `from` and `to` point to the same path.
      * - The relative path otherwise.
      */
-    public relative(to: Filepath): string {
-        return this.#_pathApi.relative(this._value, to.valueOf());
-    }
+    public relative(to: Filepath): string;
 
     /**
      * `resolve()` is a wrapper around NodeJS's `path.resolve()`.
@@ -312,23 +217,7 @@ export class Filepath extends RefinedString {
      * @returns
      * The assembled, normalised Filepath. Guaranteed to be an absolute path.
      */
-    public resolve(...paths: string[]): Filepath {
-        // resolve() will always return an absolute path
-        const newAbsPath = this.#_pathApi.resolve(
-            this.#_base || "",
-            this._value,
-            ...paths
-        );
-
-        // all done
-        return new Filepath(
-            newAbsPath,
-            {
-                pathApi: this.#_pathApi,
-                base: this.#_base
-            }
-        );
-    }
+    public resolve(...paths: string[]): Filepath;
 
     /**
      * `toNamespacedPath()` is a wrapper around NodeJS's
@@ -346,14 +235,36 @@ export class Filepath extends RefinedString {
      * - on Windows, the namespaced path.
      * - on POSIX, the unmodified path.
      */
-    public toNamespacedPath(): Filepath {
-        return new Filepath(
-            this.#_pathApi.toNamespacedPath(this._value),
-            {
-                pathApi: this.#_pathApi,
-                base: this.#_base
-            }
-        );
+    public toNamespacedPath(): Filepath;
+
+    // =======================================================================
+    //
+    // INHERITED METHODS
+    //
+    // -----------------------------------------------------------------------
+
+    /**
+     * `[Symbol.toPrimitive]()` supports Javascript auto-conversion to
+     * a string or number.
+     */
+    public [ Symbol.toPrimitive ](hint: PrimitiveHint): string | number;
+
+    /**
+     * valueOf() returns the wrapped value.
+     *
+     * For types passed by reference, we do NOT return a clone of any kind.
+     * You have to be careful not to accidentally change this value.
+     *
+     * @returns the data that is stored in this object.
+     */
+    public valueOf(): T {
+        return this._value;
     }
 
+    /**
+     * implementsValue() is a helper method for the {@link isValue} type guard
+     * function.
+     */
+    public implementsValue(): this is Value<T>;
 }
+```
