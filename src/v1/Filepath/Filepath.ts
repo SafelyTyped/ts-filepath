@@ -81,7 +81,8 @@ export class Filepath extends RefinedString {
             base
         }: Partial<MakeFilepathOptions> = {}
     ) {
-        super(mustBeFilepathData, input, { onError });
+        // we normalise the given path
+        super(mustBeFilepathData, pathApi.normalize(input), { onError });
 
         this.#_base = base;
         this.#_pathApi = pathApi;

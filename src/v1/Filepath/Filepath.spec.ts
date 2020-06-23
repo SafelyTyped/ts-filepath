@@ -51,6 +51,30 @@ describe("Filepath()", () => {
             });
         });
 
+        describe("the `input` parameter", () => {
+            it("normalises the given path before storing it", () => {
+                const inputLocation = "this/hasnot/../has/been/./normalised";
+                const dummyApi = new DummyPathApi();
+                dummyApi.normalizeResponses = [path.posix.normalize(inputLocation)];
+
+                const expectedCallList = [
+                    "normalize()",
+                ];
+                const expectParamList = [
+                    inputLocation,
+                ];
+
+                const unit = new Filepath(inputLocation, { pathApi: dummyApi });
+                expect(unit.valueOf()).to.equal("this/has/been/normalised");
+
+                const actualCallList = dummyApi.calledList;
+                const actualParamList = dummyApi.paramList;
+
+                expect(actualCallList).to.eql(expectedCallList);
+                expect(actualParamList).to.eql(expectParamList);
+            });
+        });
+
         describe("user-supplied options", () => {
             describe("`base` option", () => {
                 it("accepts a `base` option", () => {
