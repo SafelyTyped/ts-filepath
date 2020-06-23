@@ -29,6 +29,7 @@ The following changes have been completed, and will be included in the next tagg
   - added `InvalidFilepathDataError`
 * Filepath
   - added `Filepath`
+  - added `MakeFilepathOptions`
   - added `isFilepathData()`
   - added `makeFilepath()`
   - added `mustBeFilepath()`

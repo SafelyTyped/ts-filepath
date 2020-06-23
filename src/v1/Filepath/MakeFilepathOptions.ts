@@ -30,9 +30,29 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-export * from "./MakeFilepathOptions";
-export * from "./Filepath";
-export * from "./isFilepathData";
-export * from "./makeFilepath";
-export * from "./mustBeFilepathData";
-export * from "./validateFilepathData";
+import { OnErrorOptions } from "@safelytyped/core-types";
+import { PathApi } from "@safelytyped/node-pathapi";
+
+/**
+ * `MakeFilepathOptions` describes the user-supplied options that
+ * {@link makeFilepath} and {@link Filepath.constructor} accept.
+ *
+ * @category Filepath
+ */
+export interface MakeFilepathOptions extends OnErrorOptions {
+    /**
+     * `base` is for keeping track of any path that this Filepath
+     * is built from, relative to, and the like.
+     *
+     * Useful for tracking parent paths when resolving '$ref' entries
+     * in JSON schema and the like.
+     */
+    base?: string,
+
+    /**
+     * `pathApi` is the API to use for all path operations.
+     *
+     * Useful for passing in your own API when writing unit tests.
+     */
+    pathApi: PathApi
+}
