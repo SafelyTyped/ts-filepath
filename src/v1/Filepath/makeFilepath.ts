@@ -37,8 +37,10 @@ import {
     SmartConstructor,
     THROW_THE_ERROR,
 } from "@safelytyped/core-types";
+import path from "path";
 
 import { Filepath } from "./Filepath";
+import { MakeFilepathOptions } from "./MakeFilepathOptions";
 
 /**
  * `makeFilepath()` is a smart constructor. It verifies that the
@@ -50,6 +52,11 @@ import { Filepath } from "./Filepath";
  * This is the data we'll use to create the new Filepath
  * @param onError
  * If `input` fails validation, we'll pass an {@link AppError} to this.
+ * @param base
+ * Use this to keep track of a parent path of some kind.
+ * @param pathApi
+ * Use this if you want to pass in your own implementation (e.g. for
+ * unit testing)
  * @param fnOpts
  * These are user-supplied functional options.
  * @returns
@@ -58,11 +65,13 @@ import { Filepath } from "./Filepath";
 export const makeFilepath: SmartConstructor<string, Filepath, OnErrorOptions, Filepath> = (
     input: string,
     {
-        onError = THROW_THE_ERROR
-    }: Partial<OnErrorOptions> = {},
+        onError = THROW_THE_ERROR,
+        pathApi = path,
+        base
+    }: Partial<MakeFilepathOptions> = {},
     ...fnOpts: FunctionalOption<Filepath, OnErrorOptions>[]
 ): Filepath => applyFunctionalOptions(
-    new Filepath(input, { onError }),
+    new Filepath(input, { onError, pathApi, base }),
     { onError },
     ...fnOpts
 );

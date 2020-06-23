@@ -29,13 +29,11 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+import { RefinedString, THROW_THE_ERROR } from "@safelytyped/core-types";
+import { PathApi } from "@safelytyped/node-pathapi";
+import path from "path";
 
-import {
-    OnErrorOptions,
-    RefinedString,
-    THROW_THE_ERROR
-} from "@safelytyped/core-types";
-
+import { MakeFilepathOptions } from "./MakeFilepathOptions";
 import { mustBeFilepathData } from "./mustBeFilepathData";
 
 /**
@@ -44,6 +42,23 @@ import { mustBeFilepathData } from "./mustBeFilepathData";
  * @category Filepath
  */
 export class Filepath extends RefinedString {
+
+    /**
+     * `#_base` is for keeping track of any path that this Filepath
+     * is built from, relative to, and the like.
+     *
+     * Useful for tracking parent paths when resolving '$ref' entries
+     * in JSON schema and the like.
+     */
+    #_base: string|undefined;
+
+    /**
+     * `#_pathApi` is the API to use for all path operations.
+     *
+     * Useful for passing in your own API when writing unit tests.
+     */
+    #_pathApi: PathApi;
+
     /**
      * `Constructor` creates a new `Filepath`.
      *
@@ -52,13 +67,44 @@ export class Filepath extends RefinedString {
      * @param onError
      * If `input` fails validation, we pass an {@link AppError}
      * to `onError()`.
+     * @param base
+     * Use this to keep track of a parent path of some kind.
+     * @param pathApi
+     * Use this if you want to pass in your own implementation (e.g. for
+     * unit testing)
      */
     public constructor(
         input: string,
         {
-            onError = THROW_THE_ERROR
-        }: Partial<OnErrorOptions> = {}
+            onError = THROW_THE_ERROR,
+            pathApi = path,
+            base
+        }: Partial<MakeFilepathOptions> = {}
     ) {
         super(mustBeFilepathData, input, { onError });
+
+        this.#_base = base;
+        this.#_pathApi = pathApi;
+    }
+
+    /**
+     * `base` is for keeping track of any path that this Filepath
+     * is built from, relative to, and the like.
+     *
+     * Useful for tracking parent paths when resolving '$ref' entries
+     * in JSON schema and the like.
+     */
+    get base() {
+        return this.#_base;
+    }
+
+    /**
+     * `pathApi` is the API to use for all path operations.
+     *
+     * By default, this is the Node JS `path` module for your platform
+     * (`path.windows` or `path.posix`).
+     */
+    get pathApi() {
+        return this.#_pathApi;
     }
 }
