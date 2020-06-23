@@ -1,3 +1,4 @@
+// tslint:disable: no-unused-expression
 //
 // Copyright (c) 2020-present Ganbaro Digital Ltd.
 //
@@ -81,6 +82,21 @@ describe("Filepath()", () => {
                     expect(actualValue.pathApi).to.equal(inputValue);
                 });
             });
+        });
+    });
+
+    describe(".base", () => {
+        it("is `undefined` by default", () => {
+            const unit = new Filepath("dummy");
+
+            expect(unit.base).to.be.undefined;
+        });
+
+        it("contains the user-supplied `base` option", () => {
+            const inputValue = "/this/is/a/test";
+
+            const unit = new Filepath("dummy", { base: inputValue });
+            expect(unit.base).to.equal(inputValue);
         });
     });
 });
