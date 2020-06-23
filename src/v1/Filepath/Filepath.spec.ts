@@ -418,4 +418,48 @@ describe("Filepath()", () => {
         });
     });
 
+    describe(".parse()", () => {
+        it("breaks down the Filepath into consituent parts", () => {
+            const unit = new Filepath("/tmp/example/file.ts");
+            const expectedValue: path.ParsedPath = {
+                "base": "file.ts",
+                "dir": "/tmp/example",
+                "ext": ".ts",
+                "name": "file",
+                "root": "/"
+            };
+
+            const actualValue = unit.parse();
+            expect(actualValue).to.eql(expectedValue);
+        });
+
+        it("uses the provided pathApi", () => {
+            const dummyApi = new DummyPathApi();
+            dummyApi.normalizeResponses = ["/tmp/example/file.ts"];
+
+            const expectedCallList = [
+                // from unit.parse()
+                "parse()",
+            ];
+            const expectParamList = [
+                // from unit.parse()
+                "/tmp/example/file.ts",
+            ];
+
+            const unit = new Filepath(
+                "/tmp/example/file.ts",
+                { pathApi: dummyApi }
+            );
+            expect(unit.valueOf()).to.equal("/tmp/example/file.ts");
+
+            dummyApi.reset();
+
+            unit.parse();
+            const actualCallList = dummyApi.calledList;
+            const actualParamList = dummyApi.paramList;
+
+            expect(actualCallList).to.eql(expectedCallList);
+            expect(actualParamList).to.eql(expectParamList);
+        });
+    });
 });

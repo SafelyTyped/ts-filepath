@@ -59,6 +59,15 @@ export class Filepath extends RefinedString {
      */
     #_pathApi: PathApi;
 
+
+    /**
+     * `#_parts` holds the `path.parse()` result of this Filepath.
+     *
+     * It's an internal cache, to avoid repeated calls to `path.parse()`
+     * from inside `Filepath.parse()`.
+     */
+    #_parts: path.ParsedPath | undefined;
+
     /**
      * `Constructor` creates a new `Filepath`.
      *
@@ -221,4 +230,35 @@ export class Filepath extends RefinedString {
             }
         );
     }
+
+    /**
+     * `parse()` is a wrapper around NodeJS's `path.parse()`.
+     *
+     * `parse()` breaks down this Filepath into separate parts. Trailing
+     * directory separators are ignored.
+     *
+     * The returned object can include any / all of:
+     *
+     * - `root`: the root of the filesystem, if the path is absolute
+     * - `dir`: all the root and folder segments of the path
+     * - `base`: the filename segment of the path
+     * - `name`: the filename segment of the path, minus the extension
+     * - `ext`: the extension segment of the path, starting with a `.`
+     *
+     * All of these are strings. Use {@link PathApi.format} to convert
+     * this back into a single path string.
+     *
+     * @returns
+     * The breakdown of this Filepath.
+     */
+    public parse(): path.ParsedPath {
+        // we calculate it once, and then stash it
+        // for repeated reference
+        const retval = this.#_parts || this.#_pathApi.parse(this._value);
+        this.#_parts = this.#_parts || retval;
+
+        // all done
+        return retval;
+    }
+
 }
