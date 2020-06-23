@@ -26,7 +26,7 @@
   ],
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@safelytyped/core-types": "^0.1.0",
+    "@safelytyped/core-types": "^0.1.10",
     "@safelytyped/node-pathapi": "^1.0.0"
   },
   "devDependencies": {
