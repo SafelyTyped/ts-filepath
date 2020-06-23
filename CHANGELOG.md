@@ -33,6 +33,7 @@ The following changes have been completed, and will be included in the next tagg
     - added `Filepath` `pathApi` option
     - added `Filepath.basename()`
     - added `Filepath.dirname()`
+    - added `Filepath.extname()`
   - added `MakeFilepathOptions`
   - added `isFilepathData()`
   - added `makeFilepath()`

@@ -157,4 +157,23 @@ export class Filepath extends RefinedString {
         );
     }
 
+    /**
+     * `extname` is a wrapper around NodeJS's `path.extname()`.
+     *
+     * `extname()` returns the extension of the Filepath, from the last
+     * occurance of the `.` character in the last segment of the path to
+     * the end of the string.
+     *
+     * If there is no `.` in the last segment of the path, or if the only
+     * `.` character is the first character of the last segment (ie a
+     * UNIX dotfile with no extension), an empty string is returned.
+     *
+     * @returns
+     * - the file extension (starting with a `.`) on success
+     * - an empty string otherwise
+     */
+    public extname(): string {
+        return this.#_pathApi.extname(this._value);
+    }
+
 }

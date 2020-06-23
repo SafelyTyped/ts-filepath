@@ -223,4 +223,51 @@ describe("Filepath()", () => {
             expect(actualParamList).to.eql(expectParamList);
         });
     });
+
+    describe(".extname()", () => {
+        it("returns the Filepath's extension", () => {
+            const unit = new Filepath("example.ts", { pathApi: path.posix });
+
+            const expectedValue = ".ts"
+            const actualValue = unit.extname();
+
+            expect(actualValue).to.eql(expectedValue);
+        });
+
+        it("returns an empty string if the Filepath has no extension", () => {
+            const unit = new Filepath("example", { pathApi: path.posix });
+
+            const expectedValue = ""
+            const actualValue = unit.extname();
+
+            expect(actualValue).to.eql(expectedValue);
+        });
+
+        it("uses the provided pathApi", () => {
+            const inputLocation = "example.ts";
+            const dummyApi = new DummyPathApi();
+            dummyApi.normalizeResponses = [inputLocation];
+
+            const expectedCallList = [
+                "extname()",
+            ];
+            const expectParamList = [
+                // from unit.extname
+                "example.ts",
+            ];
+
+            const unit = new Filepath(inputLocation, { pathApi: dummyApi });
+            expect(unit.valueOf()).to.equal("example.ts");
+
+            dummyApi.reset();
+            dummyApi.extnameResponses = [".ts"];
+
+            unit.extname();
+            const actualCallList = dummyApi.calledList;
+            const actualParamList = dummyApi.paramList;
+
+            expect(actualCallList).to.eql(expectedCallList);
+            expect(actualParamList).to.eql(expectParamList);
+        });
+    });
 });
