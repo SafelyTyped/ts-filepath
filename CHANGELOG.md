@@ -37,6 +37,7 @@ The following changes have been completed, and will be included in the next tagg
     - added `Filepath.isAbsolute()`
     - added `Filepath.join()`
     - added `Filepath.parse()`
+    - added `Filepath.relative()`
   - added `MakeFilepathOptions`
   - added `isFilepathData()`
   - added `makeFilepath()`

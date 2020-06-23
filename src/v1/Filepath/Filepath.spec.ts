@@ -462,4 +462,59 @@ describe("Filepath()", () => {
             expect(actualParamList).to.eql(expectParamList);
         });
     });
+
+    describe(".relative()", () => {
+        it("returns the relative path between two Filepaths", () => {
+            const unit1 = new Filepath(
+                "/this/is/an/example",
+                { pathApi: path.posix }
+            );
+            const unit2 = new Filepath(
+                "/this/is/another/example",
+                { pathApi: path.posix }
+            );
+
+            const expectedValue = "../../another/example";
+            const actualValue = unit1.relative(unit2);
+
+            expect(actualValue).to.eql(expectedValue);
+        });
+
+        it("uses the provided pathApi", () => {
+            const dummyApi = new DummyPathApi();
+            dummyApi.resolveResponses = ["/tmp/this/is/an/example"];
+            dummyApi.normalizeResponses = ["/tmp/this/is/an/example"];
+
+            const expectedCallList = [
+                // from unit.relative()
+                "relative()",
+            ];
+            const expectParamList = [
+                // from unit.relative()
+                "/tmp/this/is/an/example",
+                "/tmp/this/is/another/example"
+            ];
+
+            const unit1 = new Filepath(
+                "/tmp/this/is/an/example",
+                { pathApi: dummyApi }
+            );
+            expect(unit1.valueOf()).to.equal("/tmp/this/is/an/example");
+            const unit2 = new Filepath(
+                "/tmp/this/is/another/example",
+                { pathApi: path.posix }
+            );
+            expect(unit2.valueOf()).to.equal("/tmp/this/is/another/example");
+
+            dummyApi.reset();
+
+            unit1.relative(unit2);
+            const actualCallList = dummyApi.calledList;
+            const actualParamList = dummyApi.paramList;
+
+            expect(actualCallList).to.eql(expectedCallList);
+            expect(actualParamList).to.eql(expectParamList);
+        });
+    });
+
 });

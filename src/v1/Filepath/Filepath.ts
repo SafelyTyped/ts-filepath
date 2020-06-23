@@ -261,4 +261,23 @@ export class Filepath extends RefinedString {
         return retval;
     }
 
+    /**
+     * `relative()` is a wrapper around NodeJS's `path.relative()`.
+     *
+     * `relative()` calculates a relative path between `from` and `to`.
+     * `from` is this Filepath.
+     *
+     * If `from` and `to` point to the same path (after calling
+     * {@link PathApi.resolve} on them both), and empty string is returned.
+     *
+     * @param to
+     * Where do you want the relative path to go to?
+     * @returns
+     * - An empty string if `from` and `to` point to the same path.
+     * - The relative path otherwise.
+     */
+    public relative(to: Filepath): string {
+        return this.#_pathApi.relative(this._value, to.valueOf());
+    }
+
 }
