@@ -62,7 +62,7 @@ import { MakeFilepathOptions } from "./MakeFilepathOptions";
  * @returns
  * The new Filepath object.
  */
-export const makeFilepath: SmartConstructor<string, Filepath, OnErrorOptions, Filepath> = (
+export const makeFilepath: SmartConstructor<string, Filepath, MakeFilepathOptions, Filepath> = (
     input: string,
     {
         onError = THROW_THE_ERROR,
