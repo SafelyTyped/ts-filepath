@@ -107,4 +107,28 @@ export class Filepath extends RefinedString {
     get pathApi() {
         return this.#_pathApi;
     }
+
+    // =======================================================================
+    //
+    // pathAPi wrappers
+    //
+    // -----------------------------------------------------------------------
+
+    /**
+     * `basename()` is a wrapper around NodeJS's `path.basename()`.
+     *
+     * `basename` returns the last portion of a path, similar to the Unix
+     * `basename` command. Trailing directory separators are ignored,
+     * see {@link PathApi.sep}.
+     *
+     * @param ext
+     * An optional file extension to strip (if present).
+     * @returns
+     * The last portion of the Filepath. If the Filepath` ends in `ext`,
+     * that is stripped too.
+     */
+    public basename(ext?: string): string {
+        return this.#_pathApi.basename(this._value, ext);
+    }
+
 }

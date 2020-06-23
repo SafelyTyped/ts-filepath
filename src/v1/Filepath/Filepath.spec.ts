@@ -115,4 +115,66 @@ describe("Filepath()", () => {
             expect(unit.pathApi).to.equal(inputValue);
         });
     });
+
+    describe(".basename()", () => {
+        it("returns the basename of the Filepath", () => {
+            const inputLocation = process.cwd();
+            const expectedValue = path.basename(process.cwd());
+
+            const unit = new Filepath(inputLocation);
+            const actualValue = unit.basename();
+
+            expect(actualValue).to.equal(expectedValue);
+        });
+
+        it("strips the extension from the Filepath, if it matches", () => {
+            const inputLocation = "example.ts";
+            const expectedValue = "example";
+
+            const unit = new Filepath(inputLocation);
+            const actualValue = unit.basename(".ts");
+
+            expect(actualValue).to.equal(expectedValue);
+        });
+
+        it("preserves the extension of the Filepath, if it does not match", () => {
+            const inputLocation = "example.ts";
+            const expectedValue = "example.ts";
+
+            const unit = new Filepath(inputLocation);
+            const actualValue = unit.basename(".php");
+
+            expect(actualValue).to.equal(expectedValue);
+        });
+
+        it("uses the provided pathApi", () => {
+            const inputLocation = "example.ts";
+            const dummyApi = new DummyPathApi();
+            dummyApi.normalizeResponses = [inputLocation];
+
+            const expectedCallList = [
+                "basename()",
+                "basename()",
+            ];
+            const expectParamList = [
+                "example.ts",
+                ".php",
+                "example.ts",
+                null,
+            ];
+
+            const unit = new Filepath(inputLocation, { pathApi: dummyApi });
+            expect(unit.valueOf()).to.equal("example.ts");
+
+            dummyApi.reset();
+
+            unit.basename(".php");
+            unit.basename();
+            const actualCallList = dummyApi.calledList;
+            const actualParamList = dummyApi.paramList;
+
+            expect(actualCallList).to.eql(expectedCallList);
+            expect(actualParamList).to.eql(expectParamList);
+        });
+    });
 });
