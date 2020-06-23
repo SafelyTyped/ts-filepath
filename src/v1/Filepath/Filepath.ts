@@ -177,4 +177,20 @@ export class Filepath extends RefinedString {
         return this.#_pathApi.extname(this._value);
     }
 
+    /**
+     * `isAbsolute()` is a wrapper around NodeJS's `path.isAbsolute()`.
+     *
+     * `isAbsolute()` determines if this Filepath is an absolute path or not.
+     *
+     * An absolute path is a path that starts with a filesystem root
+     * segment. Absolute paths are the opposite of relative paths: they
+     * don't rely on the current working directory.
+     *
+     * @returns
+     * - `true` if this Filepath is an absolute path.
+     * - `false` if this Filepath is a relative path.
+     */
+    public isAbsolute(): boolean {
+        return this.#_pathApi.isAbsolute(this._value);
+    }
 }

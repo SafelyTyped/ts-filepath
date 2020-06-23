@@ -34,6 +34,7 @@ The following changes have been completed, and will be included in the next tagg
     - added `Filepath.basename()`
     - added `Filepath.dirname()`
     - added `Filepath.extname()`
+    - added `Filepath.isAbsolute()`
   - added `MakeFilepathOptions`
   - added `isFilepathData()`
   - added `makeFilepath()`

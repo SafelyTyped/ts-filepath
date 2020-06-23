@@ -294,4 +294,51 @@ describe("Filepath()", () => {
             expect(actualParamList).to.eql(expectParamList);
         });
     });
+
+    describe(".isAbsolute()", () => {
+        it("returns true if the Filepath contains an absolute path", () => {
+            const unit = new Filepath("/tmp", { pathApi: path.posix });
+            const expectedValue = true;
+
+            const actualValue = unit.isAbsolute();
+
+            expect(actualValue).to.equal(expectedValue);
+        });
+
+        it("returns false if the Filepath contains a relative path", () => {
+            const unit = new Filepath("./tmp", { pathApi: path.posix });
+            const expectedValue = false;
+
+            const actualValue = unit.isAbsolute();
+
+            expect(actualValue).to.equal(expectedValue);
+        });
+
+        it("uses the provided pathApi", () => {
+            const inputLocation = "example.ts";
+            const dummyApi = new DummyPathApi();
+            dummyApi.normalizeResponses = [inputLocation];
+
+            const expectedCallList = [
+                "isAbsolute()",
+            ];
+            const expectParamList = [
+                // from unit.isAbsolute()
+                "example.ts",
+            ];
+
+            const unit = new Filepath(inputLocation, { pathApi: dummyApi });
+            expect(unit.valueOf()).to.equal("example.ts");
+
+            dummyApi.reset();
+            dummyApi.isAbsoluteResponses = [ true ];
+
+            unit.isAbsolute();
+            const actualCallList = dummyApi.calledList;
+            const actualParamList = dummyApi.paramList;
+
+            expect(actualCallList).to.eql(expectedCallList);
+            expect(actualParamList).to.eql(expectParamList);
+        });
+    });
 });
