@@ -1,7 +1,7 @@
 {
   "name": "@safelytyped/filepath",
   "version": "0.1.0",
-  "description": "A safe path for working with locations on local filesystems, for Typescript.",
+  "description": "A safe type for working with locations on local filesystems, for Typescript.",
   "repository": "github:SafelyTyped/ts-filepath",
   "main": "lib/v1/index.js",
   "types": "lib/v1/index.d.ts",
