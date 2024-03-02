@@ -30,33 +30,19 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import {
-    DataPath,
-    DEFAULT_DATA_PATH,
-    mustBe,
-    OnError,
-    THROW_THE_ERROR,
-} from "@safelytyped/core-types";
+import { IS_TYPE_DEFAULT_OPTIONS, isData } from "@safelytyped/core-types";
 
 import { validateFilepathData } from "./validateFilepathData";
 
 /**
- * `mustBeFilepathData()` is a type guarantee. It calls the supplied
- * {@link OnError} handler if the input value can't be used to create
- * {@link Filepath}.
+ * `isFilepathData()` is a data guard.
  *
  * @category Filepath
+ * @param input
+ * The input data to validate.
+ * @returns
+ * - `true` if `input` can be used to make a new {@link Filepath}
+ * - `false` otherwise.
  */
-export const mustBeFilepathData = (
-    input: string,
-    {
-        onError = THROW_THE_ERROR,
-        path = DEFAULT_DATA_PATH,
-    }: {
-        onError?: OnError,
-        path?: DataPath,
-    } = {},
-): string =>
-    mustBe(input, { onError })
-        .next((x) => validateFilepathData(path, x))
-        .value();
+export const isFilepathData = (input: string): boolean =>
+    isData(validateFilepathData, input, IS_TYPE_DEFAULT_OPTIONS);

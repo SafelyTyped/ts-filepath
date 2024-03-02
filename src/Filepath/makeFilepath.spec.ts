@@ -30,29 +30,37 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import { OnErrorOptions } from "@safelytyped/core-types";
-import { PathApi } from "@safelytyped/node-pathapi";
+import { describe } from "mocha";
+import { expect } from "chai";
+import { makeFilepath } from "@safelytyped/filepath";
+import { ValidFilepaths } from "../_fixtures/Filepaths";
+import { Filepath } from "@safelytyped/filepath";
+import { DummyPathApi } from "../_fixtures/PathApi";
 
-/**
- * `MakeFilepathOptions` describes the user-supplied options that
- * {@link makeFilepath} and {@link Filepath.constructor} accept.
- *
- * @category Filepath
- */
-export interface MakeFilepathOptions extends OnErrorOptions {
-    /**
-     * `base` is for keeping track of any path that this Filepath
-     * is built from, relative to, and the like.
-     *
-     * Useful for tracking parent paths when resolving '$ref' entries
-     * in JSON schema and the like.
-     */
-    base?: string,
+describe("makeFilepath()", () => {
+    describe("accepts any valid filepath", () => {
+        ValidFilepaths.forEach(inputValue => {
+            it("accepts " + JSON.stringify(inputValue), () => {
+                const actualValue = makeFilepath(inputValue);
+                expect(actualValue).to.be.instanceOf(Filepath);
+                expect(actualValue.valueOf()).to.equal(inputValue);
+            });
+        });
+    });
 
-    /**
-     * `pathApi` is the API to use for all path operations.
-     *
-     * Useful for passing in your own API when writing unit tests.
-     */
-    pathApi: PathApi
-}
+    describe("user-supplied options", () => {
+        it("passes the `base` option through", () => {
+            const inputValue = "/this/is/a/test";
+
+            const actualValue = makeFilepath("dummy", { base: inputValue });
+            expect(actualValue.base).to.equal(inputValue);
+        });
+
+        it("passes the `pathApi` option through", () => {
+            const inputValue = new DummyPathApi();
+
+            const actualValue = makeFilepath("dummy", { pathApi: inputValue });
+            expect(actualValue.pathApi).to.equal(inputValue);
+        });
+    });
+});

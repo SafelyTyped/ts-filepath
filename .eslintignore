@@ -1,0 +1,6 @@
+.eslintrc.*
+**/*.spec.ts
+**/_fixtures/**
+coverage/
+reference-docs/
+lib/

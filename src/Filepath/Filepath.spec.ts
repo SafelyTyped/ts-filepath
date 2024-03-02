@@ -30,14 +30,14 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-import { AnyAppError } from "@safelytyped/core-types";
+import type { AnyAppError } from "@safelytyped/core-types";
 import { expect } from "chai";
 import { describe } from "mocha";
 import path from "path";
 
 import { ValidFilepaths } from "../_fixtures/Filepaths";
 import { DummyPathApi } from "../_fixtures/PathApi";
-import { Filepath } from "./Filepath";
+import { Filepath } from "@safelytyped/filepath";
 
 describe("Filepath()", () => {
     describe(".constructor", () => {

@@ -30,23 +30,48 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import { expect } from "chai";
-import { describe } from "mocha";
+import {
+    applyFunctionalOptions,
+    type FunctionalOption,
+    type OnErrorOptions,
+    type SmartConstructor,
+    THROW_THE_ERROR,
+} from "@safelytyped/core-types";
+import path from "path";
 
-import { InvalidFilepathDataError } from "./InvalidFilepathDataError";
-import { DEFAULT_DATA_PATH } from "@safelytyped/core-types";
+import { Filepath } from "./Filepath";
+import type { MakeFilepathOptions } from "./MakeFilepathOptions";
 
-describe("InvalidFilepathDataError", () => {
-    describe(".constructor()", () => {
-        it("creates a Javascript error", () => {
-            const unit = new InvalidFilepathDataError({
-                public: {
-                    dataPath: DEFAULT_DATA_PATH,
-                    input: "THIS IS A TEST",
-                },
-            });
-
-            expect(unit).to.be.instanceOf(Error);
-        });
-    });
-});
+/**
+ * `makeFilepath()` is a smart constructor. It verifies that the
+ * `input` contains valid Filepath data, by calling
+ * {@link mustBeFilepathData}.
+ *
+ * @category Filepath
+ * @param input
+ * This is the data we'll use to create the new Filepath
+ * @param onError
+ * If `input` fails validation, we'll pass an {@link AppError} to this.
+ * @param base
+ * Use this to keep track of a parent path of some kind.
+ * @param pathApi
+ * Use this if you want to pass in your own implementation (e.g. for
+ * unit testing)
+ * @param fnOpts
+ * These are user-supplied functional options.
+ * @returns
+ * The new Filepath object.
+ */
+export const makeFilepath: SmartConstructor<string, Filepath, MakeFilepathOptions, Filepath> = (
+    input: string,
+    {
+        onError = THROW_THE_ERROR,
+        pathApi = path,
+        base
+    }: Partial<MakeFilepathOptions> = {},
+    ...fnOpts: FunctionalOption<Filepath, OnErrorOptions>[]
+): Filepath => applyFunctionalOptions(
+    new Filepath(input, { onError, pathApi, base }),
+    { onError },
+    ...fnOpts
+);

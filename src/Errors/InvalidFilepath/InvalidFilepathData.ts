@@ -29,23 +29,18 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-import { DEFAULT_DATA_PATH } from "@safelytyped/core-types";
-import { expect } from "chai";
-import { describe } from "mocha";
 
-import { ValidFilepaths } from "../_fixtures/Filepaths";
-import { validateFilepathData } from "./validateFilepathData";
+import type { DataPath, ExtraPublicData } from "@safelytyped/core-types";
 
-describe("validateFilepathData()", () => {
-    describe("returns any valid filepath", () => {
-        ValidFilepaths.forEach(inputValue => {
-            it("accepts " + JSON.stringify(inputValue), () => {
-                const actualValue = validateFilepathData(
-                    DEFAULT_DATA_PATH,
-                    inputValue
-                );
-                expect(actualValue).to.equal(inputValue);
-            });
-        });
-    });
-});
+/**
+ * `InvalidFilepathData` defines the data that every
+ * {@link InvalidFilepathError} requires.
+ *
+ * @category Errors
+ */
+export interface InvalidFilepathData extends ExtraPublicData {
+    public: {
+        dataPath: DataPath;
+        input: string;
+    };
+}

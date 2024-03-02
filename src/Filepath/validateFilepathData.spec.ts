@@ -30,19 +30,21 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import { IS_DATA_DEFAULT_OPTIONS, isData } from "@safelytyped/core-types";
+import { expect } from "chai";
+import { describe } from "mocha";
 
-import { validateFilepathData } from "./validateFilepathData";
+import { ValidFilepaths } from "../_fixtures/Filepaths";
+import { validateFilepathData } from "@safelytyped/filepath";
 
-/**
- * `isFilepathData()` is a data guard.
- *
- * @category Filepath
- * @param input
- * The input data to validate.
- * @returns
- * - `true` if `input` can be used to make a new {@link Filepath}
- * - `false` otherwise.
- */
-export const isFilepathData = (input: string): boolean =>
-    isData(validateFilepathData, input, IS_DATA_DEFAULT_OPTIONS);
+describe("validateFilepathData()", () => {
+    describe("returns any valid filepath", () => {
+        ValidFilepaths.forEach(inputValue => {
+            it("accepts " + JSON.stringify(inputValue), () => {
+                const actualValue = validateFilepathData(
+                    inputValue
+                );
+                expect(actualValue).to.equal(inputValue);
+            });
+        });
+    });
+});
