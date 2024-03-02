@@ -30,32 +30,17 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import {
-    AppError,
-    AppErrorData,
-    makeHttpStatusCode,
-    makeStructuredProblemReport
-} from "@safelytyped/core-types";
+import { describe } from "mocha";
+import { expect } from "chai";
+import { isFilepathData } from "@safelytyped/filepath";
+import { ValidFilepaths } from "../_fixtures/Filepaths";
 
-import { MODULE_NAME } from "../defaults/MODULE_NAME";
-import { InvalidFilepathData } from "./InvalidFilepathData";
-
-/**
- * `InvalidFilepathDataError` is thrown whenever we're given an
- * invalid value to {@link makeFilepath}.
- *
- * @category Errors
- */
-export class InvalidFilepathDataError extends AppError<InvalidFilepathData> {
-    public constructor(params: InvalidFilepathData & AppErrorData) {
-        const spr = makeStructuredProblemReport<InvalidFilepathData>({
-            definedBy: MODULE_NAME,
-            description: "input falls outside the range of a valid Filepath",
-            errorId: params.errorId,
-            extra: { public: params.public },
-            status: makeHttpStatusCode(422),
+describe("isFilepathData()", () => {
+    describe("accepts any valid filepath", () => {
+        ValidFilepaths.forEach(inputValue => {
+            it("accepts " + JSON.stringify(inputValue), () => {
+                expect(isFilepathData(inputValue)).to.equal(true);
+            });
         });
-
-        super(spr);
-    }
-}
+    });
+});

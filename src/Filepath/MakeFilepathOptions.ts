@@ -30,17 +30,29 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import { DataPath, ExtraPublicData } from "@safelytyped/core-types";
+import type { OnErrorOptions } from "@safelytyped/core-types";
+import type { PathApi } from "@safelytyped/node-pathapi";
 
 /**
- * `InvalidFilepathData` defines the data that every
- * {@link InvalidFilepathError} requires.
+ * `MakeFilepathOptions` describes the user-supplied options that
+ * {@link makeFilepath} and {@link Filepath.constructor} accept.
  *
- * @category Errors
+ * @category Filepath
  */
-export interface InvalidFilepathData extends ExtraPublicData {
-    public: {
-        dataPath: DataPath;
-        input: string;
-    };
+export interface MakeFilepathOptions extends OnErrorOptions {
+    /**
+     * `base` is for keeping track of any path that this Filepath
+     * is built from, relative to, and the like.
+     *
+     * Useful for tracking parent paths when resolving '$ref' entries
+     * in JSON schema and the like.
+     */
+    base?: string,
+
+    /**
+     * `pathApi` is the API to use for all path operations.
+     *
+     * Useful for passing in your own API when writing unit tests.
+     */
+    pathApi: PathApi
 }

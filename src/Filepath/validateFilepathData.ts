@@ -30,37 +30,40 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import { describe } from "mocha";
-import { expect } from "chai";
-import { makeFilepath } from "./makeFilepath";
-import { ValidFilepaths } from "../_fixtures/Filepaths";
-import { Filepath } from "./Filepath";
-import { DummyPathApi } from "../_fixtures/PathApi";
+import {
+    type AppErrorOr,
+    DEFAULT_DATA_PATH,
+    type TypeValidatorOptions
+} from "@safelytyped/core-types";
 
-describe("makeFilepath()", () => {
-    describe("accepts any valid filepath", () => {
-        ValidFilepaths.forEach(inputValue => {
-            it("accepts " + JSON.stringify(inputValue), () => {
-                const actualValue = makeFilepath(inputValue);
-                expect(actualValue).to.be.instanceOf(Filepath);
-                expect(actualValue.valueOf()).to.equal(inputValue);
-            });
-        });
-    });
-
-    describe("user-supplied options", () => {
-        it("passes the `base` option through", () => {
-            const inputValue = "/this/is/a/test";
-
-            const actualValue = makeFilepath("dummy", { base: inputValue });
-            expect(actualValue.base).to.equal(inputValue);
-        });
-
-        it("passes the `pathApi` option through", () => {
-            const inputValue = new DummyPathApi();
-
-            const actualValue = makeFilepath("dummy", { pathApi: inputValue });
-            expect(actualValue.pathApi).to.equal(inputValue);
-        });
-    });
-});
+/**
+ * `validateFilepathData()` is a {@link DataValidator}. Use it to
+ * prove that the given input is a legal input value for
+ * {@link makeFilepath}
+ *
+ * @param path
+ * where are we in the data structure that you are validating?
+ * @param input
+ * the value to validate
+ * @returns
+ * - `input` if validation succeeds, or
+ * - an `AppError` explaining why validation failed
+ *
+ * @category Filepath
+ */
+export function validateFilepathData (
+    input: string,
+    {
+        path = DEFAULT_DATA_PATH
+    }: Partial<TypeValidatorOptions> = {}
+): AppErrorOr<string> {
+    // for now, we don't have a way to check that `input` does
+    // contain a valid filepath.
+    //
+    // - we can't check if the given filepath exists, because filepaths
+    //   don't have to exist to be valid
+    //
+    // however, do still use this validator, in case we come up with
+    // a meaningful check in the future!
+    return input;
+}

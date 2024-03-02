@@ -29,11 +29,12 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+
 import { RefinedString, THROW_THE_ERROR } from "@safelytyped/core-types";
-import { PathApi } from "@safelytyped/node-pathapi";
+import type { PathApi } from "@safelytyped/node-pathapi";
 import path from "path";
 
-import { MakeFilepathOptions } from "./MakeFilepathOptions";
+import type { MakeFilepathOptions } from "./MakeFilepathOptions";
 import { mustBeFilepathData } from "./mustBeFilepathData";
 
 /**

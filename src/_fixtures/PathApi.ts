@@ -31,7 +31,7 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 //
-import { PathApi } from "@safelytyped/node-pathapi";
+import type { PathApi } from "@safelytyped/node-pathapi";
 import path from "path";
 
 export const validPosixPaths = [

@@ -1,19 +1,20 @@
 {
   "name": "@safelytyped/filepath",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A safe type for working with locations on local filesystems, for Typescript.",
   "repository": "github:SafelyTyped/ts-filepath",
-  "main": "lib/v1/index.js",
-  "types": "lib/v1/index.d.ts",
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
+  "types": "lib/types/index.d.ts",
   "scripts": {
-    "build": "npm run clean && npm run lint && tsc",
-    "lint": "tslint -p ./tsconfig.json",
+    "build": "npm run clean && tsc -b ./tsconfig-cjs.json ./tsconfig-esm.json ./tsconfig-types.json",
+    "lint": "npx eslint .",
     "prepublishOnly": "npm run test",
-    "prepack": "npm run build && rimraf lib/**/_*",
-    "test": "npm run build && mocha -r ts-node/register \"src/**/*.spec.ts\"",
-    "cover": "rimraf coverage && rimraf .nyc_output && nyc --cache=false npm run test",
-    "clean": "rimraf lib",
-    "docs": "typedoc"
+    "prepack": "npm run build && npm run lint && rimraf lib/**/_*",
+    "test": "npm run build && mocha",
+    "cover": "npm run clean && c8 --cache=false npm run test",
+    "clean": "rimraf coverage lib",
+    "docs": "npm run build && npx typedoc"
   },
   "contributors": [
     "Stuart Herbert <stuherbert@ganbarodigital.com> (https://ganbarodigital.com)"
@@ -26,22 +27,38 @@
   ],
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@safelytyped/core-types": "^0.3.0",
-    "@safelytyped/node-pathapi": "^1.0.0"
+    "@safelytyped/core-types": "^0.4.5",
+    "@safelytyped/node-pathapi": "^1.1.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.8",
-    "@types/mocha": "^7.0.1",
-    "@types/node": "^14.0",
-    "chai": "^4.2.0",
+    "@swc/cli": "^0.1.62",
+    "@swc/core": "^1.3.95",
+    "@types/chai": "^4.3",
+    "@types/mocha": "^10.0",
+    "@types/node": "^20.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "c8": "^9.1.0",
+    "chai": "^4.3.0",
     "chai-bytes": "^0.1.2",
     "chai-string": "^1.5.0",
-    "mocha": "^7.0.1",
-    "nyc": "^15.0.0",
+    "eslint": "^8.52.0",
+    "mocha": "^10.0",
     "rimraf": "^3.0.0",
-    "ts-node": "^9.0.0",
-    "tslint": "^6.0.0",
-    "typedoc": "^0.20.0",
-    "typescript": "^4.0"
+    "ts-node": "^10.9",
+    "tsconfig-paths": "^4.2.0",
+    "typedoc": "^0.25.2",
+    "typedoc-theme-hierarchy": "^4.1.2",
+    "typescript": "^5.0"
+  },
+  "c8": {
+    "all": true,
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "**/_fixtures/*",
+      "**/*.spec.ts"
+    ]
   }
 }

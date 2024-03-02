@@ -30,48 +30,18 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import {
-    applyFunctionalOptions,
-    FunctionalOption,
-    OnErrorOptions,
-    SmartConstructor,
-    THROW_THE_ERROR,
-} from "@safelytyped/core-types";
-import path from "path";
+import { describe } from "mocha";
+import { expect } from "chai";
+import { mustBeFilepathData } from "@safelytyped/filepath";
+import { ValidFilepaths } from "../_fixtures/Filepaths";
 
-import { Filepath } from "./Filepath";
-import { MakeFilepathOptions } from "./MakeFilepathOptions";
-
-/**
- * `makeFilepath()` is a smart constructor. It verifies that the
- * `input` contains valid Filepath data, by calling
- * {@link mustBeFilepathData}.
- *
- * @category Filepath
- * @param input
- * This is the data we'll use to create the new Filepath
- * @param onError
- * If `input` fails validation, we'll pass an {@link AppError} to this.
- * @param base
- * Use this to keep track of a parent path of some kind.
- * @param pathApi
- * Use this if you want to pass in your own implementation (e.g. for
- * unit testing)
- * @param fnOpts
- * These are user-supplied functional options.
- * @returns
- * The new Filepath object.
- */
-export const makeFilepath: SmartConstructor<string, Filepath, MakeFilepathOptions, Filepath> = (
-    input: string,
-    {
-        onError = THROW_THE_ERROR,
-        pathApi = path,
-        base
-    }: Partial<MakeFilepathOptions> = {},
-    ...fnOpts: FunctionalOption<Filepath, OnErrorOptions>[]
-): Filepath => applyFunctionalOptions(
-    new Filepath(input, { onError, pathApi, base }),
-    { onError },
-    ...fnOpts
-);
+describe("mustBeFilepathData()", () => {
+    describe("accepts any valid filepath", () => {
+        ValidFilepaths.forEach(inputValue => {
+            it("accepts " + JSON.stringify(inputValue), () => {
+                const actualValue = mustBeFilepathData(inputValue);
+                expect(actualValue).to.equal(inputValue);
+            });
+        });
+    });
+});

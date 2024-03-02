@@ -1,0 +1,10 @@
+{
+    "extends": "./tsconfig-build.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "ES2022",
+        "downlevelIteration": true,
+        "outDir": "./lib/cjs",
+        "verbatimModuleSyntax": false
+    }
+}

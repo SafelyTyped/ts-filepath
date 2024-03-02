@@ -30,18 +30,33 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import { describe } from "mocha";
-import { expect } from "chai";
-import { mustBeFilepathData } from "./mustBeFilepathData";
-import { ValidFilepaths } from "../_fixtures/Filepaths";
+import {
+    type DataPath,
+    DEFAULT_DATA_PATH,
+    mustBe,
+    type OnError,
+    THROW_THE_ERROR,
+} from "@safelytyped/core-types";
 
-describe("mustBeFilepathData()", () => {
-    describe("accepts any valid filepath", () => {
-        ValidFilepaths.forEach(inputValue => {
-            it("accepts " + JSON.stringify(inputValue), () => {
-                const actualValue = mustBeFilepathData(inputValue);
-                expect(actualValue).to.equal(inputValue);
-            });
-        });
-    });
-});
+import { validateFilepathData } from "./validateFilepathData";
+
+/**
+ * `mustBeFilepathData()` is a type guarantee. It calls the supplied
+ * {@link OnError} handler if the input value can't be used to create
+ * {@link Filepath}.
+ *
+ * @category Filepath
+ */
+export const mustBeFilepathData = (
+    input: string,
+    {
+        onError = THROW_THE_ERROR,
+        path = DEFAULT_DATA_PATH,
+    }: {
+        onError?: OnError,
+        path?: DataPath,
+    } = {},
+): string =>
+    mustBe(input, { onError })
+        .next((x) => validateFilepathData(x, { path }))
+        .value();
